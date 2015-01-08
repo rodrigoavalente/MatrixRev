@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iomanip>
+#include <cstdlib>
 #include <iostream>
 
 namespace LinAlg {
@@ -11,44 +12,77 @@ namespace LinAlg {
     {
         public:
             Matrix ();
-            Matrix (unsigned lin, unsigned col);
+            Matrix (unsigned row, unsigned column);
             Matrix (const LinAlg::Matrix<Type>& otherMatrix);
+            Matrix (std::string Mat);
             virtual ~Matrix ();
 
-            unsigned getNumberOfLines ();
-            unsigned getNumberOfColumns ();
+            unsigned getNumberOfRows () const;
+            unsigned getNumberOfColumns () const;
 
-            Type operator() (unsigned line, unsigned column);
-            void operator() (unsigned line, unsigned column, Type number);
+            Type& operator() (unsigned row, unsigned column);
+            Type operator() (unsigned  row, unsigned column) const;
+            void operator() (unsigned row, unsigned column, Type number);
 
-            void operator= (std::string Mat);
-            void operator= (LinAlg::Matrix<Type>& Mat);
+            void operator= (std::string rhs);
+            LinAlg::Matrix<Type>& operator= (const LinAlg::Matrix<Type>& otherMatrix);
 
-            LinAlg::Matrix<Type> operator+= (LinAlg::Matrix<Type>& Mat);
+            LinAlg::Matrix<Type> operator- () const;
+
+            LinAlg::Matrix<Type>& operator+= (const Type& rhs /*scalar*/);
+            friend LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs += rhs;}
+            friend LinAlg::Matrix<Type> operator+ (const Type& lhs, LinAlg::Matrix<Type> rhs) {return rhs += lhs;}
+
+            LinAlg::Matrix<Type>& operator+= (const LinAlg::Matrix<Type>& rhs);
+            friend LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs += rhs;};
+
+            LinAlg::Matrix<Type>& operator-= (const Type& rhs /*scalar*/);
+            friend LinAlg::Matrix<Type> operator- (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs -= rhs;}
+            friend LinAlg::Matrix<Type> operator- (const Type& lhs, LinAlg::Matrix<Type> rhs) {return rhs -= lhs;}
+
+            LinAlg::Matrix<Type>& operator-= (const LinAlg::Matrix<Type>& rhs);
+            friend LinAlg::Matrix<Type> operator- (LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs -= rhs;};
+
+            LinAlg::Matrix<Type>& operator*= (const Type& rhs /*scalar*/);
+            friend LinAlg::Matrix<Type> operator* (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs *= rhs;};
+            friend LinAlg::Matrix<Type> operator* (const Type& lhs, LinAlg::Matrix<Type> rhs) {return rhs *= lhs;}
+
+            LinAlg::Matrix<Type>& operator*= (const LinAlg::Matrix<Type>& rhs);
+            friend LinAlg::Matrix<Type> operator* (LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs *= rhs;};
+
+            LinAlg::Matrix<Type>& operator/= (const Type& rhs);
+            friend LinAlg::Matrix<Type> operator/ (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs /= rhs;};
+
+            //LinAlg::Matrix<Type>& operator/= (const LinAlg::Matrix<Type>& rhs);
+            //friend LinAlg::Matrix<Type> operator/ (const LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs /= rhs};
+
+            void swap (const LinAlg::Matrix<Type>& otherMatrix);
+            friend void swap (LinAlg::Matrix<Type>& lhs, LinAlg::Matrix<Type>& rhs) {lhs.swap(rhs);};
         private:
             void Init (std::string Mat);
-            void Init (unsigned lin, unsigned col);
+            void Init (unsigned row, unsigned column);
 
-            void Add (unsigned lin, unsigned col);
+            void ReInit (unsigned row, unsigned column);
 
-            unsigned lines, columns;
+            void Add (unsigned& row, unsigned& column, Type& number);
+
+            bool CheckDimensions(const LinAlg::Matrix<Type>& rhs, unsigned operation);
+
+            unsigned rows, columns;
             Type** mat;
     };
 
     template<typename Type>
-    void Zeros (Matrix<Type>& Mat);
+    void Zeros (LinAlg::Matrix<Type>& Mat);
 
     template<typename Type>
-    LinAlg::Matrix<Type> Zeros (unsigned lines, unsigned columns);
+    LinAlg::Matrix<Type>& Zeros (unsigned rows, unsigned columns);
 
     template<typename Type>
     LinAlg::Matrix<Type> Eye (unsigned dimension);
 
     template<typename Type>
-    LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> Mat1, LinAlg::Matrix<Type> Mat2);
-
-    template<typename Type>
-    void Print (Matrix<Type>& Mat);
+    void Print (const LinAlg::Matrix<Type>& Mat);
 };
 
 #endif // MATRIX_H
