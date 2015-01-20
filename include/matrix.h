@@ -11,10 +11,10 @@ namespace LinAlg {
     class Matrix
     {
         public:
-            Matrix ();
-            Matrix (unsigned row, unsigned column);
-            Matrix (const LinAlg::Matrix<Type>& otherMatrix);
             Matrix (std::string Mat);
+            Matrix (unsigned row, unsigned column);
+            Matrix (): rows(0), columns(0), mat(NULL){};
+            Matrix (const LinAlg::Matrix<Type>& otherMatrix);
             virtual ~Matrix ();
 
             unsigned getNumberOfRows () const;
@@ -30,11 +30,8 @@ namespace LinAlg {
             LinAlg::Matrix<Type> operator- () const;
 
             LinAlg::Matrix<Type>& operator+= (const Type& rhs /*scalar*/);
-            friend LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs += rhs;}
-            friend LinAlg::Matrix<Type> operator+ (const Type& lhs, LinAlg::Matrix<Type> rhs) {return rhs += lhs;}
 
             LinAlg::Matrix<Type>& operator+= (const LinAlg::Matrix<Type>& rhs);
-            friend LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs += rhs;};
 
             LinAlg::Matrix<Type>& operator-= (const Type& rhs /*scalar*/);
             friend LinAlg::Matrix<Type> operator- (LinAlg::Matrix<Type> lhs, const Type& rhs) {return lhs -= rhs;}
@@ -58,6 +55,7 @@ namespace LinAlg {
 
             void swap (const LinAlg::Matrix<Type>& otherMatrix);
             friend void swap (LinAlg::Matrix<Type>& lhs, LinAlg::Matrix<Type>& rhs) {lhs.swap(rhs);};
+
         private:
             void Init (std::string Mat);
             void Init (unsigned row, unsigned column);
@@ -72,11 +70,20 @@ namespace LinAlg {
             Type** mat;
     };
 
+    template<typename MatrixType, typename ScalarType>
+    LinAlg::Matrix<MatrixType> operator+ (LinAlg::Matrix<MatrixType> lhs, const ScalarType& rhs) {return lhs += rhs;}
+
+    template<typename Type>
+    LinAlg::Matrix<Type> operator+ (LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs += rhs;};
+
+//    template<typename Type>
+//    LinAlg::Matrix<Type> operator+ (const Type& lhs, LinAlg::Matrix<Type> rhs) {return rhs += lhs;}
+
     template<typename Type>
     void Zeros (LinAlg::Matrix<Type>& Mat);
 
     template<typename Type>
-    LinAlg::Matrix<Type>& Zeros (unsigned rows, unsigned columns);
+    LinAlg::Matrix<Type> Zeros (unsigned rows, unsigned columns);
 
     template<typename Type>
     LinAlg::Matrix<Type> Eye (unsigned dimension);

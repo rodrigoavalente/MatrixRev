@@ -1,24 +1,19 @@
 #include "../include/matrix.h"
 
-template<typename Type>
-LinAlg::Matrix<Type>::Matrix ()
-{
-    this->rows = 0;
-    this->columns = 0;
+template class LinAlg::Matrix<int>;
+template class LinAlg::Matrix<float>;
+template class LinAlg::Matrix<double>;
 
-    this->mat = NULL;
+template<typename Type>
+LinAlg::Matrix<Type>::Matrix (std::string Mat)
+{
+    this->Init(Mat);
 }
 
 template<typename Type>
 LinAlg::Matrix<Type>::Matrix (unsigned row, unsigned column)
 {
     this->Init(row, column);
-}
-
-template<typename Type>
-LinAlg::Matrix<Type>::Matrix (std::string Mat)
-{
-    this->Init(Mat);
 }
 
 template<typename Type>
@@ -345,23 +340,26 @@ void LinAlg::Zeros(Matrix<Type>& Mat)
 {
     for(unsigned i = 0; i < Mat.getNumberOfRows(); i++)
         for(unsigned j = 0; j < Mat.getNumberOfColumns(); j++)
-            Mat(i, j, 0);
-};
+            Mat(i, j) = 0;
+}
+
+template void LinAlg::Zeros<int> (LinAlg::Matrix<int>&);
+template void LinAlg::Zeros<float> (LinAlg::Matrix<float>&);
+template void LinAlg::Zeros<double> (LinAlg::Matrix<double>&);
 
 template<typename Type>
-LinAlg::Matrix<Type>& LinAlg::Zeros (unsigned rows, unsigned columns)
+LinAlg::Matrix<Type> LinAlg::Zeros (unsigned rows, unsigned columns)
 {
     LinAlg::Matrix<Type> Ret(rows, columns);
 
-    for(unsigned i = 0; i < Ret.getNumberOfRows(); i++)
-        for(unsigned j = 0; j < Ret.getNumberOfColumns(); j++)
-            Ret(i, j, 0);
-
     return Ret;
-};
+}
+template LinAlg::Matrix<int> LinAlg::Zeros<int> (unsigned rows, unsigned columns);
+template LinAlg::Matrix<float> LinAlg::Zeros<float> (unsigned rows, unsigned columns);
+template LinAlg::Matrix<double> LinAlg::Zeros<double> (unsigned rows, unsigned columns);
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Eye(unsigned dimension)
+LinAlg::Matrix<Type> LinAlg::Eye (unsigned dimension)
 {
     LinAlg::Matrix<Type> Ret(dimension, dimension);
 
@@ -369,13 +367,17 @@ LinAlg::Matrix<Type> LinAlg::Eye(unsigned dimension)
         for(unsigned j = 0; j < dimension; j++)
             {
                 if( i == j)
-                    Ret(i, j, 1);
+                    Ret(i, j) = 1;
                 else
-                    Ret(i, j, 0);
+                    Ret(i, j) = 0;
             }
 
     return Ret;
-};
+}
+
+template LinAlg::Matrix<int> LinAlg::Eye<int> (unsigned dimension);
+template LinAlg::Matrix<float> LinAlg::Eye<float> (unsigned dimension);
+template LinAlg::Matrix<double> LinAlg::Eye<double> (unsigned dimension);
 
 template<typename Type>
 void LinAlg::Print(const Matrix<Type>& Mat)
@@ -388,20 +390,8 @@ void LinAlg::Print(const Matrix<Type>& Mat)
         std::cout << std::setw(10) << Mat(i, j) << ' ';
 
     std::cout << std::endl;
-  };
+  }
 }
-
-template class LinAlg::Matrix<int>;
-template class LinAlg::Matrix<float>;
-template class LinAlg::Matrix<double>;
-
-template void LinAlg::Zeros<int> (LinAlg::Matrix<int>&);
-template void LinAlg::Zeros<float> (LinAlg::Matrix<float>&);
-template void LinAlg::Zeros<double> (LinAlg::Matrix<double>&);
-
-/*template void LinAlg::Zeros<int> (unsigned rows, unsigned columns);
-template void LinAlg::Zeros<float> (unsigned rows, unsigned columns);
-template void LinAlg::Zeros<double> (unsigned rows, unsigned columns);*/
 
 template void LinAlg::Print<int> (const LinAlg::Matrix<int>&);
 template void LinAlg::Print<float> (const LinAlg::Matrix<float>&);
