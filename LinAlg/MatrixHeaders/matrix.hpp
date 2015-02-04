@@ -241,6 +241,14 @@ void LinAlg::Matrix<Type>::operator= (std::string Mat)
     this->Init(Mat);
 }
 
+template<typename Type>
+LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator= (const LinAlg::Matrix<Type>& rhs)
+{
+    swap(rhs);
+
+    return *this;
+}
+
 template<typename Type> template<typename OtherMatrixType>
 LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator= (const LinAlg::Matrix<OtherMatrixType>& rhs)
 {
@@ -346,6 +354,7 @@ void LinAlg::Zeros(Matrix<Type>& Mat)
 template<typename Type>
 LinAlg::Matrix<Type> LinAlg::Zeros (unsigned rows, unsigned columns)
 {
+
     LinAlg::Matrix<Type> Ret(rows, columns);
 
     return Ret;
@@ -366,6 +375,57 @@ LinAlg::Matrix<Type> LinAlg::Eye (unsigned dimension)
             }
 
     return Ret;
+}
+
+template<typename Type>
+Type LinAlg::Determinant(LinAlg::Matrix<Type>& mat)
+{
+    Type determinant = 0;
+    unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns(), aux1, aux2;
+    LinAlg::Matrix<Type> temp(rows - 1, columns - 1);
+
+
+    if(rows != columns)
+        determinant = 0;
+    else if(rows == 1)
+        determinant = mat(1, 1);
+    else if(rows == 2)
+        determinant = mat(1, 1)*mat(2, 2) - mat(1, 2)*mat(2, 1);
+    else
+    {
+        for(unsigned k = 0; k < rows; k++)
+        {
+            aux1 = 0;
+            aux2 = 0;
+            for(unsigned i = 1; i < rows; i++)
+            {
+                for(unsigned j = 0; j < rows; j++)
+                {
+                    if(j == k)
+                        continue;
+
+                    temp(aux1 + 1, aux2 + 1) = mat(i + 1, j + 1);
+                    aux2++;
+
+                    if(aux2 == rows -1)
+                    {
+                        aux1++;
+                        aux2 = 0;
+                    }
+                }
+            }
+
+            determinant += pow( -1, k)*mat(1, k + 1) * LinAlg::Determinant(temp);
+        }
+    }
+
+    return determinant;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& Mat)
+{
+
 }
 
 template<typename Type>

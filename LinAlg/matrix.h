@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <cmath>
 #include <string>
 #include <iomanip>
 #include <cstdlib>
@@ -25,8 +26,10 @@ namespace LinAlg {
             void operator() (unsigned row, unsigned column, Type number);
 
             void operator= (std::string rhs);
+            LinAlg::Matrix<Type>& operator= (const LinAlg::Matrix<Type>& otherMatrix);
             template<typename OtherMatrixType>
             LinAlg::Matrix<Type>& operator= (const LinAlg::Matrix<OtherMatrixType>& otherMatrix);
+
 
             LinAlg::Matrix<Type> operator- () const;
 
@@ -100,6 +103,12 @@ namespace LinAlg {
 
     template<typename Type>
     LinAlg::Matrix<Type> Eye (unsigned dimension);
+
+    template<typename Type>
+    Type Determinant (LinAlg::Matrix<Type>& mat);
+
+    template<typename Type>
+    LinAlg::Matrix<Type> Cofactor(LinAlg::Matrix<Type>& Mat);
 
     template<typename Type>
     void Print (const LinAlg::Matrix<Type>& Mat);
